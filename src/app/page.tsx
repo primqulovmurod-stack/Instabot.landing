@@ -25,7 +25,7 @@ export default function LandingV2Page() {
       {/* Top Banner */}
       <div className="bg-primary text-primary-foreground py-2 text-center text-[10px] md:text-xs font-medium tracking-tight px-4">
         Yangi: Instagram AI Agent - 2024-yilning eng yaxshi yashirin quroli. 
-        <Link href="https://instabot-partner.vercel.app" className="ml-2 underline font-bold">Hoziroq sinab ko&apos;ring →</Link>
+        <Link href="/dashboard" className="ml-2 underline font-bold">Hoziroq sinab ko&apos;ring →</Link>
       </div>
 
       {/* Navigation */}
@@ -45,7 +45,7 @@ export default function LandingV2Page() {
           </div>
 
           <div className="flex items-center gap-3">
-            <Link href="https://instabot-partner.vercel.app">
+            <Link href="/dashboard">
               <div className="flex items-center gap-2">
                 <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center transition-transform hover:scale-110 cursor-pointer">
                   <User className="h-5 w-5 text-primary-foreground" />
@@ -86,7 +86,7 @@ export default function LandingV2Page() {
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
-            <Link href="https://instabot-partner.vercel.app" className="w-full sm:w-auto">
+            <Link href="/dashboard" className="w-full sm:w-auto">
               <Button size="lg" className="w-full sm:w-auto h-14 px-10 rounded-2xl text-lg font-bold shadow-xl shadow-primary/20 transition-transform hover:-translate-y-1">
                 BEPUL BOSHLASH
                 <ArrowRight className="ml-2 h-5 w-5" />
@@ -201,7 +201,7 @@ export default function LandingV2Page() {
                 </div>
               </CardContent>
               <CardFooter>
-                <Link href="https://instabot-partner.vercel.app" className="w-full">
+                <Link href="/dashboard" className="w-full">
                   <Button className="w-full rounded-xl font-bold py-6">TANLASH</Button>
                 </Link>
               </CardFooter>
@@ -254,7 +254,7 @@ export default function LandingV2Page() {
       <section className="py-24 px-4 text-center space-y-8 bg-background relative overflow-hidden">
         <h2 className="text-3xl md:text-6xl font-extrabold italic tracking-tight">Ko&apos;proq pul topishga tayyormisiz?</h2>
         <p className="text-muted-foreground text-lg max-w-xl mx-auto">Biznesingizni avtopilotga qo&apos;ying va sotuvlaringizni oshiring.</p>
-        <Link href="https://instabot-partner.vercel.app" className="block">
+        <Link href="/dashboard" className="block">
           <Button size="lg" className="h-16 px-16 rounded-full text-xl font-bold shadow-2xl transition-all hover:scale-105">
             BEPUL BOSHLASH
           </Button>
