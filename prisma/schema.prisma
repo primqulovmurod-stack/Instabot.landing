@@ -1,0 +1,25 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                 Int      @id @default(autoincrement())
+  externalId         String   @unique // USR-XXXX
+  email              String?  @unique
+  phone              String?
+  username           String?  @unique
+  instagramId        String?  @unique
+  instagramConnected Boolean  @default(false)
+  aiEnabled          Boolean  @default(false)
+  aiPrompt           String   @default("")
+  activityType       String   @default("other")
+  isPaid             Boolean  @default(false)
+  trialExpiresAt     DateTime @default(now())
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+}

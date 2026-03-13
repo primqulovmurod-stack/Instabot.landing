@@ -69,7 +69,7 @@ export function Sidebar({ activeTab, onTabChange, isMobile = false }: SidebarPro
           <Zap className="w-5 h-5 text-primary-foreground fill-current" />
         </div>
         {(!currentCollapsed || isMobile) && (
-          <span className="font-bold text-lg tracking-tight">InstaBot</span>
+          <span className="font-bold text-lg tracking-tight uppercase">Instabot</span>
         )}
       </div>
 

@@ -21,6 +21,7 @@ interface UserContextType {
   updatePrompt: (prompt: string) => void;
   toggleAI: () => void;
   isTrialExpired: boolean;
+  saveSettings: (updates: Partial<User>) => Promise<void>;
 }
 
 const defaultUser: User = {
@@ -98,6 +99,49 @@ export function UserProvider({ children }: { children: ReactNode }) {
   const searchParams = useSearchParams();
   const router = useRouter();
 
+  // Load user data from DB
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await fetch(`/api/user-status?externalId=${user.id}`);
+        const data = await response.json();
+        if (data.success) {
+          setUser(prev => ({
+            ...prev,
+            instagramConnected: data.instagramConnected,
+            instagramUsername: data.instagramUsername,
+            aiEnabled: data.aiEnabled,
+            aiPrompt: data.prompt || prev.aiPrompt,
+            activityType: data.activityType || prev.activityType,
+            trialDaysLeft: data.trialDaysLeft,
+            isPaid: data.isPaid
+          }));
+        }
+      } catch (error) {
+        console.error("Failed to load user:", error);
+      }
+    };
+    fetchUser();
+  }, []);
+
+  const saveSettings = async (updates: Partial<User>) => {
+    try {
+      const response = await fetch('/api/user-status', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          externalId: user.id,
+          ...updates
+        })
+      });
+      if (response.ok) {
+        setUser(prev => ({ ...prev, ...updates }));
+      }
+    } catch (error) {
+      console.error("Failed to save settings:", error);
+    }
+  };
+
   // Handle OAuth callback parameters
   useEffect(() => {
     const connected = searchParams.get("connected");
@@ -125,23 +169,23 @@ export function UserProvider({ children }: { children: ReactNode }) {
     }));
   }, []);
 
-  const disconnectInstagram = useCallback(() => {
-    setUser((prev: User) => ({
-      ...prev,
+  const disconnectInstagram = useCallback(async () => {
+    await saveSettings({
       instagramConnected: false,
-      instagramId: undefined,
-      pageId: undefined,
-      aiEnabled: false,
-    }));
-  }, []);
+      instagramId: "",
+      instagramUsername: "",
+      aiEnabled: false
+    });
+  }, [saveSettings]);
 
   const updatePrompt = useCallback((prompt: string) => {
     setUser((prev: User) => ({ ...prev, aiPrompt: prompt }));
   }, []);
 
   const toggleAI = useCallback(() => {
-    setUser((prev: User) => ({ ...prev, aiEnabled: !prev.aiEnabled }));
-  }, []);
+    const newValue = !user.aiEnabled;
+    saveSettings({ aiEnabled: newValue });
+  }, [user.aiEnabled, saveSettings]);
 
   const isTrialExpired = !user.isPaid && user.trialDaysLeft <= 0;
 
@@ -157,6 +201,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
         updatePrompt,
         toggleAI,
         isTrialExpired,
+        saveSettings,
       }}
     >
       {children}

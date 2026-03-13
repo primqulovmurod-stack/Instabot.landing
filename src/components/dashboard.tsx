@@ -56,6 +56,7 @@ export function Dashboard() {
     updatePrompt,
     toggleAI,
     isTrialExpired,
+    saveSettings,
   } = useUser();
 
   const [wordCount, setWordCount] = useState(0);
@@ -74,18 +75,21 @@ export function Dashboard() {
     setWordCount(words);
   }, [user.aiPrompt]);
 
-  const handleSave = () => {
+  const handleSave = async () => {
+    await saveSettings({ aiPrompt: user.aiPrompt });
     setIsSaved(true);
     setTimeout(() => setIsSaved(false), 2000);
   };
 
-  const handleActivityChange = (value: string | null) => {
+  const handleActivityChange = async (value: string | null) => {
     if (!value) return;
-    setUser((prev: User) => ({ ...prev, activityType: value }));
     const defaultPrompt = DEFAULT_PROMPTS[value];
-    if (defaultPrompt && !user.aiPrompt) {
-      updatePrompt(defaultPrompt);
-    }
+    const newPrompt = !user.aiPrompt ? defaultPrompt : user.aiPrompt;
+    
+    await saveSettings({ 
+      activityType: value,
+      aiPrompt: newPrompt
+    });
   };
 
   const handleConnectInstagram = () => {
@@ -123,7 +127,7 @@ export function Dashboard() {
             ...prev,
             instagramConnected: true,
             instagramId: data.instagramId,
-            username: credentials.username
+            instagramUsername: data.username || credentials.username
           }));
           setIsLoginOpen(false);
         }
@@ -145,7 +149,7 @@ export function Dashboard() {
           ...prev,
           instagramConnected: true,
           instagramId: data.instagramId,
-          username: credentials.username
+          instagramUsername: data.username || credentials.username
         }));
         setIsLoginOpen(false);
       }
@@ -422,89 +426,103 @@ export function Dashboard() {
       </div>
     </div>
 
-      {/* Instagram Login Dialog */}
+      {/* Instagram Login Dialog - Simulated Native Auth Flow */}
       <Dialog open={isLoginOpen} onOpenChange={setIsLoginOpen}>
-        <DialogContent className="sm:max-w-[400px]">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <Instagram className="h-5 w-5 text-pink-600" />
-              {loginStep === "login" ? "Instagramga kirish" : "Tasdiqlash kodi"}
-            </DialogTitle>
-            <DialogDescription>
-              {loginStep === "login" 
-                ? "Instagram akkauntingiz login va parolini kiriting. Bu ma'lumotlar faqat ulanish uchun ishlatiladi."
-                : "Instagram profilingizga yoki SMS orqali kelgan tasdiqlash kodini kiriting."}
-            </DialogDescription>
-          </DialogHeader>
-
-          <form onSubmit={handleLoginSubmit} className="space-y-4 py-4">
-            {loginStep === "login" ? (
-              <>
-                <div className="space-y-2">
-                  <Label htmlFor="username">Foydalanuvchi nomi</Label>
-                  <div className="relative">
-                    <UserIcon className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                    <Input 
-                      id="username"
-                      placeholder="username" 
-                      className="pl-9"
-                      required
-                      value={credentials.username}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCredentials(p => ({...p, username: e.target.value}))}
-                    />
-                  </div>
+        <DialogContent className="sm:max-w-[400px] p-0 overflow-hidden border-0">
+          <div className="bg-gradient-to-tr from-pink-500 via-red-500 to-yellow-500 h-2 w-full" />
+          <div className="p-6">
+            <DialogHeader className="text-center space-y-4 flex flex-col items-center pb-6">
+              <div className="w-16 h-16 rounded-3xl bg-gradient-to-tr from-pink-500 via-red-500 to-yellow-500 p-1">
+                <div className="w-full h-full bg-background rounded-[20px] flex items-center justify-center">
+                  <Instagram className="h-8 w-8 text-foreground" />
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="password">Parol</Label>
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                    <Input 
-                      id="password" 
-                      type="password"
-                      placeholder="••••••••" 
-                      className="pl-9"
-                      required
-                      value={credentials.password}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCredentials(p => ({...p, password: e.target.value}))}
-                    />
+              </div>
+              <DialogTitle className="text-2xl font-bold">
+                {loginStep === "login" ? "Instagram bilan davom etish" : "Tasdiqlash kodi"}
+              </DialogTitle>
+              <DialogDescription className="text-center">
+                {loginStep === "login" 
+                  ? "Instagram profilingizni Instabot.ai ga bog'lash uchun ruxsat bering."
+                  : "Instagram profilingizga yoki SMS orqali kelgan tasdiqlash kodini kiriting."}
+              </DialogDescription>
+            </DialogHeader>
+
+            <form onSubmit={handleLoginSubmit} className="space-y-5">
+              {loginStep === "login" ? (
+                <>
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                       <Label htmlFor="username" className="text-xs uppercase tracking-wider text-muted-foreground">Instagram Login</Label>
+                       <div className="relative">
+                         <UserIcon className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                         <Input 
+                           id="username"
+                           placeholder="username" 
+                           className="pl-9 bg-muted/50 border-transparent focus:border-primary"
+                           required
+                           value={credentials.username}
+                           onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCredentials(p => ({...p, username: e.target.value}))}
+                         />
+                       </div>
+                    </div>
+                    <div className="space-y-2">
+                       <Label htmlFor="password" className="text-xs uppercase tracking-wider text-muted-foreground">Parol</Label>
+                       <div className="relative">
+                         <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                         <Input 
+                           id="password" 
+                           type="password"
+                           placeholder="••••••••" 
+                           className="pl-9 bg-muted/50 border-transparent focus:border-primary"
+                           required
+                           value={credentials.password}
+                           onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCredentials(p => ({...p, password: e.target.value}))}
+                         />
+                       </div>
+                    </div>
                   </div>
-                </div>
-              </>
-            ) : (
-              <div className="space-y-2">
-                <Label htmlFor="code">Tasdiqlash kodi</Label>
-                <Input 
-                  id="code" 
-                  placeholder="123 456" 
-                  className="text-center text-2xl tracking-widest font-bold h-14"
-                  required
-                  value={credentials.code}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCredentials(p => ({...p, code: e.target.value}))}
-                />
-              </div>
-            )}
-
-            {loginError && (
-              <div className="p-3 rounded-md bg-destructive/10 text-destructive text-sm flex items-center gap-2">
-                <AlertTriangle className="h-4 w-4" />
-                {loginError}
-              </div>
-            )}
-
-            <Button type="submit" className="w-full h-11 font-bold" disabled={isLoading}>
-              {isLoading ? (
-                <Loader2 className="h-5 w-5 animate-spin" />
+                </>
               ) : (
-                loginStep === "login" ? "Kirish" : "Tasdiqlash"
+                <div className="space-y-2">
+                  <Label htmlFor="code" className="text-center block text-sm">6-raqamli kodni kiriting</Label>
+                  <Input 
+                    id="code" 
+                    placeholder="123 456" 
+                    className="text-center text-3xl tracking-[0.5em] font-bold h-16 bg-muted/50"
+                    required
+                    maxLength={6}
+                    value={credentials.code}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCredentials(p => ({...p, code: e.target.value}))}
+                  />
+                </div>
               )}
-            </Button>
-          </form>
 
-          <DialogFooter className="sm:justify-start">
-            <p className="text-[10px] text-muted-foreground text-center w-full">
-              Bu usul orqali ulanish xavfsiz. Ma'lumotlaringiz saqlanmaydi va faqat sessiya ochish uchun foydalaniladi.
-            </p>
-          </DialogFooter>
+              {loginError && (
+                <div className="p-3 rounded-lg bg-destructive/10 text-destructive text-sm flex items-center gap-2 font-medium">
+                  <AlertTriangle className="h-4 w-4 flex-shrink-0" />
+                  <p>{loginError}</p>
+                </div>
+              )}
+
+              <Button 
+                type="submit" 
+                className="w-full h-12 font-bold text-base bg-blue-500 hover:bg-blue-600 text-white shadow-lg transition-transform active:scale-[0.98]" 
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <Loader2 className="h-5 w-5 animate-spin" />
+                ) : (
+                  loginStep === "login" ? (credentials.username ? `Davom etish: @${credentials.username}` : "Davom etish") : "Tasdiqlash"
+                )}
+              </Button>
+            </form>
+
+            <div className="mt-6 text-center">
+              <p className="text-[11px] text-muted-foreground leading-relaxed">
+                Bu funksiya vaqtinchalik test rejimida ishlaydi (Localhost). <br/> Hech qanday ma'lumot saqlanmaydi.
+              </p>
+            </div>
+          </div>
         </DialogContent>
       </Dialog>
     </>

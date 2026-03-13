@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { IgApiClient } from "instagram-private-api";
 import { pendingSessions } from "@/lib/ig-state";
+import { prisma } from "@/lib/prisma";
 
 export async function POST(req: NextRequest) {
   try {
@@ -36,6 +37,22 @@ export async function POST(req: NextRequest) {
       }
 
       pendingSessions.delete(username);
+
+      // Save to Database
+      await prisma.user.upsert({
+        where: { externalId: "USR-7D2K9X" },
+        update: {
+          instagramConnected: true,
+          instagramId: auth.pk.toString(),
+          username: auth.username
+        },
+        create: {
+          externalId: "USR-7D2K9X",
+          instagramConnected: true,
+          instagramId: auth.pk.toString(),
+          username: auth.username
+        }
+      });
 
       return NextResponse.json({ 
         success: true, 
