@@ -93,9 +93,25 @@ export function Dashboard() {
   };
 
   const handleConnectInstagram = () => {
-    setIsLoginOpen(true);
-    setLoginStep("login");
-    setLoginError("");
+    const appId = process.env.NEXT_PUBLIC_META_APP_ID;
+    // Scopes needed for Instagram Messaging
+    const scopes = [
+      "instagram_basic",
+      "instagram_manage_messages",
+      "pages_manage_metadata",
+      "pages_show_list",
+      "pages_read_engagement",
+      "business_management"
+    ].join(",");
+    
+    // Pass externalId in state to identify user on callback
+    const state = user.id;
+    const redirectUri = `${window.location.origin}/api/auth/instagram`;
+    
+    const oauthUrl = `https://www.facebook.com/v19.0/dialog/oauth?client_id=${appId}&display=page&extras={"setup":{"supported_configurations":["instagram_messaging"]}}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scopes)}&state=${state}&response_type=code`;
+    
+    setConnecting(true);
+    window.location.href = oauthUrl;
   };
 
   const handleLoginSubmit = async (e: React.FormEvent) => {
@@ -203,6 +219,7 @@ export function Dashboard() {
             <Switch 
               checked={user.instagramConnected} 
               onCheckedChange={() => user.instagramConnected ? disconnectInstagram() : handleConnectInstagram()} 
+              disabled={connecting}
             />
           </CardContent>
         </Card>

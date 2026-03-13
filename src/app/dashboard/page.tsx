@@ -69,13 +69,11 @@ export default function DashboardPage() {
             <div className="flex items-center gap-4">
               {/* Mobile Menu Trigger */}
               <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
-                <SheetTrigger
-                  render={
-                    <Button variant="ghost" size="icon" className="lg:hidden">
-                      <Menu className="h-5 w-5" />
-                    </Button>
-                  }
-                />
+                <SheetTrigger asChild>
+                <Button variant="ghost" size="icon" className="lg:hidden">
+                  <Menu className="h-5 w-5" />
+                </Button>
+              </SheetTrigger>
                 <SheetContent side="left" className="p-0 w-64 border-r-0">
                   <SheetTitle className="sr-only">Navigatsiya menyusi</SheetTitle>
                   <Sidebar activeTab={activeTab} onTabChange={handleTabChange} isMobile />

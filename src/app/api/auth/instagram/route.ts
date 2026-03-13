@@ -1,17 +1,21 @@
 import { NextResponse } from "next/server";
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const code = searchParams.get("code");
+  const state = searchParams.get("state"); // This is our externalId
   const error = searchParams.get("error");
 
   if (error) {
     console.error("Meta OAuth Error:", error);
-    return NextResponse.redirect(new URL("/?error=auth_failed", req.url));
+    return NextResponse.redirect(new URL("/dashboard?error=auth_failed", req.url));
   }
 
-  if (!code) {
-    return NextResponse.redirect(new URL("/", req.url));
+  if (!code || !state) {
+    return NextResponse.redirect(new URL("/dashboard", req.url));
   }
 
   try {
@@ -30,12 +34,12 @@ export async function GET(req: Request) {
 
     if (tokenData.error) {
       console.error("Token Exchange Error:", tokenData.error);
-      return NextResponse.redirect(new URL("/?error=token_exchange_failed", req.url));
+      return NextResponse.redirect(new URL("/dashboard?error=token_exchange_failed", req.url));
     }
 
     const shortLivedToken = tokenData.access_token;
 
-    // 2. (Optional but Recommended) Exchange for Long-Lived User Access Token (60 days)
+    // 2. Exchange for Long-Lived User Access Token (60 days)
     const longLivedResponse = await fetch(
       `https://graph.facebook.com/v19.0/oauth/access_token?grant_type=fb_exchange_token&client_id=${appId}&client_secret=${appSecret}&fb_exchange_token=${shortLivedToken}`
     );
@@ -48,8 +52,6 @@ export async function GET(req: Request) {
     );
     const pagesData = await pagesResponse.json();
     
-    // For demo purposes, we'll just take the first page that has an instagram_business_account
-    // In a real app, you'd show a list to the user
     let instagramId = null;
     let pageId = null;
 
@@ -61,13 +63,26 @@ export async function GET(req: Request) {
       if (igData.instagram_business_account) {
         instagramId = igData.instagram_business_account.id;
         pageId = page.id;
+        // Also get the page access token for webhooks if needed
+        // const pageAccessToken = page.access_token;
         break;
       }
     }
 
-    // Redirect back to dashboard with success status
-    // In a real app, you'd save these to a database here
-    const redirectUrl = new URL("/", req.url);
+    // 4. Save to Database
+    if (state && instagramId) {
+      await prisma.user.update({
+        where: { externalId: state },
+        data: {
+          instagramId: instagramId,
+          pageId: pageId,
+          accessToken: accessToken,
+          instagramConnected: true,
+        }
+      });
+    }
+
+    const redirectUrl = new URL("/dashboard", req.url);
     redirectUrl.searchParams.set("connected", "true");
     if (instagramId) redirectUrl.searchParams.set("instagramId", instagramId);
     if (pageId) redirectUrl.searchParams.set("pageId", pageId);
@@ -75,6 +90,6 @@ export async function GET(req: Request) {
     return NextResponse.redirect(redirectUrl);
   } catch (err) {
     console.error("OAuth Catch Error:", err);
-    return NextResponse.redirect(new URL("/?error=internal_error", req.url));
+    return NextResponse.redirect(new URL("/dashboard?error=internal_error", req.url));
   }
 }

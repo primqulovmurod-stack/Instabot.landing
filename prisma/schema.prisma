@@ -14,6 +14,8 @@ model User {
   phone              String?
   username           String?  @unique
   instagramId        String?  @unique
+  pageId             String?
+  accessToken        String?  
   instagramConnected Boolean  @default(false)
   aiEnabled          Boolean  @default(false)
   aiPrompt           String   @default("")
