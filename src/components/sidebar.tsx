@@ -36,7 +36,7 @@ const navItems = [
   { id: "partner", label: "Hamkor paneli", icon: LayoutDashboard },
   { id: "chat-test", label: "AI Sinov", icon: TestTube },
   { id: "logs", label: "Xabarlar", icon: MessageSquare },
-  { id: "partner", label: "Hamkorlar", icon: Handshake },
+  { id: "affiliates", label: "Hamkorlar", icon: Handshake },
   { id: "settings", label: "Sozlamalar", icon: Settings },
 ];
 

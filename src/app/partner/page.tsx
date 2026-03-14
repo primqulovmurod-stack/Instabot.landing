@@ -23,7 +23,7 @@ export default function DashboardPage() {
         return <ChatTest />;
       case "logs":
         return <MessageLogs />;
-      case "partner":
+      case "affiliates":
         return <PartnerPanel />;
       case "settings":
         return <SettingsPanel />;
@@ -40,7 +40,7 @@ export default function DashboardPage() {
         return "AI Sinov Rejimi";
       case "logs":
         return "Xabarlar";
-      case "partner":
+      case "affiliates":
         return "Hamkorlik";
       case "settings":
         return "Sozlamalar";
