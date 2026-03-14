@@ -10,7 +10,7 @@ export default function LandingV2Page() {
       {/* Top Banner */}
       <div className="bg-primary text-primary-foreground py-2 text-center text-[10px] md:text-xs font-medium tracking-tight px-4 flex flex-wrap items-center justify-center gap-1">
         <span>Yangi: Instagram AI Agent - 2024-yilning eng yaxshi yashirin quroli.</span>
-        <Link href="/dashboard" className="underline font-bold text-white whitespace-nowrap">Hoziroq sinab ko&apos;ring →</Link>
+        <Link href="/partner" className="underline font-bold text-white whitespace-nowrap">Hoziroq sinab ko&apos;ring →</Link>
       </div>
 
       {/* Navigation */}
@@ -29,7 +29,7 @@ export default function LandingV2Page() {
           </div>
 
           <div className="flex items-center gap-2">
-             <Link href="/dashboard">
+             <Link href="/partner">
                 <Button className="rounded-full font-bold px-4 sm:px-6 h-9 sm:h-10 text-xs sm:text-sm transition-all hover:scale-105 active:scale-95">
                   BOSHLASH
                 </Button>
@@ -65,7 +65,7 @@ export default function LandingV2Page() {
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4 px-4 sm:px-0">
-            <Link href="/dashboard" className="w-full sm:w-auto">
+            <Link href="/partner" className="w-full sm:w-auto">
               <Button size="lg" className="w-full sm:w-auto h-12 sm:h-14 px-8 sm:px-10 rounded-2xl text-base sm:text-lg font-bold shadow-xl shadow-primary/20 transition-transform hover:-translate-y-1">
                 BEPUL BOSHLASH
                 <ArrowRight className="ml-2 h-5 w-5" />
@@ -168,7 +168,7 @@ export default function LandingV2Page() {
                 </div>
               </CardContent>
               <CardFooter>
-                <Link href="/dashboard" className="w-full">
+                <Link href="/partner" className="w-full">
                   <Button variant="outline" className="w-full rounded-xl font-bold py-6">TANLASH</Button>
                 </Link>
               </CardFooter>
@@ -198,7 +198,7 @@ export default function LandingV2Page() {
                 </div>
               </CardContent>
               <CardFooter>
-                <Link href="/dashboard" className="w-full">
+                <Link href="/partner" className="w-full">
                   <Button className="glass-button w-full rounded-xl font-bold py-6 shadow-lg shadow-primary/20">TANLASH</Button>
                 </Link>
               </CardFooter>
@@ -227,7 +227,7 @@ export default function LandingV2Page() {
                 </div>
               </CardContent>
               <CardFooter>
-                <Link href="/dashboard" className="w-full">
+                <Link href="/partner" className="w-full">
                   <Button variant="outline" className="w-full rounded-xl font-bold py-6">TANLASH</Button>
                 </Link>
               </CardFooter>
@@ -240,7 +240,7 @@ export default function LandingV2Page() {
       <section className="py-20 sm:py-24 px-4 text-center space-y-8 bg-background relative overflow-hidden">
         <h2 className="text-2xl sm:text-3xl md:text-6xl font-extrabold italic tracking-tight uppercase leading-tight sm:leading-normal">Vaqtni tejashni boshlang</h2>
         <p className="text-muted-foreground text-base sm:text-lg max-w-xl mx-auto px-4">Biznesingizni avtopilotga qo&apos;ying va sotuvlaringizni oshiring.</p>
-        <Link href="/dashboard" className="block px-4">
+        <Link href="/partner" className="block px-4">
           <Button size="lg" className="h-14 sm:h-16 px-8 sm:px-16 w-full sm:w-auto rounded-full text-lg sm:text-xl font-bold shadow-2xl transition-all hover:scale-105">
             BEPUL BOSHLASH
           </Button>
