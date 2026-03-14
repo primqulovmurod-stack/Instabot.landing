@@ -71,15 +71,28 @@ export async function GET(req: Request) {
 
     // 4. Save to Database
     if (state && instagramId) {
-      await prisma.user.update({
+      // Use upsert instead of update to handle cases where the user record might not exist yet
+      // (common in ephemeral/serverless environments with SQLite)
+      // Use upsert instead of update to handle cases where the user record might not exist in the temporary DB
+      await prisma.user.upsert({
         where: { externalId: state },
-        data: {
+        create: {
+          externalId: state,
+          instagramId: instagramId,
+          pageId: pageId,
+          accessToken: accessToken,
+          instagramConnected: true,
+        },
+        update: {
           instagramId: instagramId,
           pageId: pageId,
           accessToken: accessToken,
           instagramConnected: true,
         }
       });
+    } else {
+       console.warn("No Instagram Business Account found for user:", state);
+       return NextResponse.redirect(new URL("/dashboard?error=no_instagram_account", req.url));
     }
 
     const redirectUrl = new URL("/dashboard", req.url);
@@ -90,6 +103,6 @@ export async function GET(req: Request) {
     return NextResponse.redirect(redirectUrl);
   } catch (err) {
     console.error("OAuth Catch Error:", err);
-    return NextResponse.redirect(new URL("/dashboard?error=internal_error", req.url));
+    return NextResponse.redirect(new URL(`/dashboard?error=internal_error&msg=${encodeURIComponent(err instanceof Error ? err.message : "Unknown")}`, req.url));
   }
 }

@@ -75,6 +75,16 @@ export function Dashboard() {
     setWordCount(words);
   }, [user.aiPrompt]);
 
+  useEffect(() => {
+    const error = new URLSearchParams(window.location.search).get("error");
+    const msg = new URLSearchParams(window.location.search).get("msg");
+    if (error) {
+      setLoginError(msg ? `Error: ${error} - ${decodeURIComponent(msg)}` : `Xatolik yuz berdi: ${error}`);
+      setIsLoginOpen(true); // Open the dialog to show the error
+      setLoginStep("login");
+    }
+  }, []);
+
   const handleSave = async () => {
     await saveSettings({ aiPrompt: user.aiPrompt });
     setIsSaved(true);
