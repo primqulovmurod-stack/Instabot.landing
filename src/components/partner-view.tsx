@@ -47,7 +47,7 @@ import {
   User as UserIcon,
 } from "lucide-react";
 
-export function Dashboard() {
+export function PartnerView() {
   const {
     user,
     setUser,
@@ -196,7 +196,7 @@ export function Dashboard() {
       <div className="max-w-6xl mx-auto space-y-6 lg:space-y-8 pb-10 px-0 lg:px-4">
       {/* Header section like official Shadcn docs */}
       <div className="flex flex-col gap-1 px-4 lg:px-0">
-        <h1 className="text-2xl lg:text-3xl font-bold tracking-tight">Boshqaruv paneli</h1>
+        <h1 className="text-2xl lg:text-3xl font-bold tracking-tight">Hamkor paneli</h1>
         <p className="text-sm lg:text-base text-muted-foreground">
           AI Agent holati va Instagram integratsiyasini boshqarish.
         </p>

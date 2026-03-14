@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Sidebar } from "@/components/sidebar";
-import { Dashboard } from "@/components/dashboard";
+import { PartnerView } from "@/components/partner-view";
 import { ChatTest } from "@/components/chat-test";
 import { MessageLogs } from "@/components/message-logs";
 import { SettingsPanel } from "@/components/settings-panel";
@@ -12,13 +12,13 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
 
 export default function DashboardPage() {
-  const [activeTab, setActiveTab] = useState("dashboard");
+  const [activeTab, setActiveTab] = useState("partner");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const renderContent = () => {
     switch (activeTab) {
-      case "dashboard":
-        return <Dashboard />;
+      case "partner":
+        return <PartnerView />;
       case "chat-test":
         return <ChatTest />;
       case "logs":
@@ -28,14 +28,14 @@ export default function DashboardPage() {
       case "settings":
         return <SettingsPanel />;
       default:
-        return <Dashboard />;
+        return <PartnerView />;
     }
   };
 
   const getPageTitle = () => {
     switch (activeTab) {
-      case "dashboard":
-        return "Boshqaruv paneli";
+      case "partner":
+        return "Hamkor paneli";
       case "chat-test":
         return "AI Sinov Rejimi";
       case "logs":
@@ -45,7 +45,7 @@ export default function DashboardPage() {
       case "settings":
         return "Sozlamalar";
       default:
-        return "Boshqaruv paneli";
+        return "Hamkor paneli";
     }
   };
 

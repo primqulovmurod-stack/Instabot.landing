@@ -33,7 +33,7 @@ interface SidebarProps {
 }
 
 const navItems = [
-  { id: "dashboard", label: "Boshqaruv paneli", icon: LayoutDashboard },
+  { id: "partner", label: "Hamkor paneli", icon: LayoutDashboard },
   { id: "chat-test", label: "AI Sinov", icon: TestTube },
   { id: "logs", label: "Xabarlar", icon: MessageSquare },
   { id: "partner", label: "Hamkorlar", icon: Handshake },

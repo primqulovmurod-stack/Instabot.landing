@@ -126,7 +126,7 @@ export default function LandingV2Page() {
           <FeatureCardV2 
             icon={<MousePointer2 className="h-6 w-6 text-primary" />}
             title="Oson Boshqaruv"
-            description="Soddalashtirilgan dashboard orqali hamma narsani osongina sozlang."
+            description="Soddalashtirilgan hamkor paneli orqali hamma narsani osongina sozlang."
           />
           <FeatureCardV2 
             icon={<Clock className="h-6 w-6 text-primary" />}

@@ -10,7 +10,7 @@ export default function DeletionPage() {
         <CardContent className="prose dark:prose-invert">
           <p>Instabot.ai tizimidan ma&apos;lumotlaringizni o&apos;chirish uchun quyidagi qadamlarni bajaring:</p>
           <ol>
-            <li>Dashboard sahifasiga kiring.</li>
+            <li>Hamkor sahifasiga kiring.</li>
             <li>&quot;Integratsiya&quot; bo&apos;limidan &quot;Ulanishni uzish&quot; tugmasini bosing.</li>
             <li>Barcha saqlangan tokenlar va ID lar zudlik bilan bazadan o&apos;chiriladi.</li>
           </ol>

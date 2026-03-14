@@ -11,11 +11,11 @@ export async function GET(req: Request) {
 
   if (error) {
     console.error("Meta OAuth Error:", error);
-    return NextResponse.redirect(new URL("/dashboard?error=auth_failed", req.url));
+    return NextResponse.redirect(new URL("/partner?error=auth_failed", req.url));
   }
 
   if (!code || !state) {
-    return NextResponse.redirect(new URL("/dashboard", req.url));
+    return NextResponse.redirect(new URL("/partner", req.url));
   }
 
   try {
@@ -34,7 +34,7 @@ export async function GET(req: Request) {
 
     if (tokenData.error) {
       console.error("Token Exchange Error:", tokenData.error);
-      return NextResponse.redirect(new URL("/dashboard?error=token_exchange_failed", req.url));
+      return NextResponse.redirect(new URL("/partner?error=token_exchange_failed", req.url));
     }
 
     const shortLivedToken = tokenData.access_token;
@@ -92,10 +92,10 @@ export async function GET(req: Request) {
       });
     } else {
        console.warn("No Instagram Business Account found for user:", state);
-       return NextResponse.redirect(new URL("/dashboard?error=no_instagram_account", req.url));
+       return NextResponse.redirect(new URL("/partner?error=no_instagram_account", req.url));
     }
 
-    const redirectUrl = new URL("/dashboard", req.url);
+    const redirectUrl = new URL("/partner", req.url);
     redirectUrl.searchParams.set("connected", "true");
     if (instagramId) redirectUrl.searchParams.set("instagramId", instagramId);
     if (pageId) redirectUrl.searchParams.set("pageId", pageId);
@@ -103,6 +103,6 @@ export async function GET(req: Request) {
     return NextResponse.redirect(redirectUrl);
   } catch (err) {
     console.error("OAuth Catch Error:", err);
-    return NextResponse.redirect(new URL(`/dashboard?error=internal_error&msg=${encodeURIComponent(err instanceof Error ? err.message : "Unknown")}`, req.url));
+    return NextResponse.redirect(new URL(`/partner?error=internal_error&msg=${encodeURIComponent(err instanceof Error ? err.message : "Unknown")}`, req.url));
   }
 }
